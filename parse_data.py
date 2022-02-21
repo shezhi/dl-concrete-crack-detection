@@ -111,7 +111,7 @@ valid_folder_path = r"SDNET2018\valid//"
 
 
 
-
+# SDNET2018/test/0/image
 def copy_images(base_path_to_images, image_list_test, image_list_train, image_list_valid, label):
   for image in image_list_test:
     image_full_path_src = base_path_to_images + image
