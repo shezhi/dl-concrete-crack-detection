@@ -1,8 +1,11 @@
 import os, os.path
 from random import shuffle
 from shutil import copyfile
-
-# specify raw dataset paths
+# SENET2018 SDNET2018是带注释的图像数据集，用于训练，验证和确定基于人工智能的混凝土裂缝检测算法。SDNET2018包含超过56,000张开裂和未开裂的混凝土（桥面板，墙壁和人行道的图像）。
+# D：deck 桥面
+#P：pavements人行道
+#W：wall墙
+# specify raw dataset paths 原始数据集路径
 non_cracked_images_path_D = r"SDNET2018\D\UD//"
 cracked_images_path_D = r"SDNET2018\D\CD//"
 non_cracked_images_path_P = r"SDNET2018\P\UP//"
@@ -11,7 +14,7 @@ non_cracked_images_path_W = r"SDNET2018\W\UW//"
 cracked_images_path_W = r"SDNET2018\W\CW//"
 
 
-# load names of files present in raw dataset paths into a list, and randomly shuffle
+# load names of files present in raw dataset paths into a list, and randomly shuffle 将原始数据集路径中存在的文件名加载到列表中，然后随机洗牌
 non_cracked_images_path_contents_D = os.listdir(non_cracked_images_path_D)
 shuffle(non_cracked_images_path_contents_D)
 cracked_images_path_contents_D = os.listdir(cracked_images_path_D)
@@ -39,14 +42,14 @@ num_of_non_cracked_images_W = len(non_cracked_images_path_contents_W)
 num_of_cracked_images_W = len(cracked_images_path_contents_W)
 
 
-# select the number of items in non-dominant class for each of the 3 types of concrete
+# select the number of items in non-dominant class for each of the 3 types of concrete 三种混泥土中分别选择少的部分，比如D（crack：6，no-crack：4），那么从D中最多拿出4个出来
 max_num_of_images_to_select_from_D = min(num_of_cracked_images_D, num_of_non_cracked_images_D)
 max_num_of_images_to_select_from_P = min(num_of_cracked_images_P, num_of_non_cracked_images_P)
 max_num_of_images_to_select_from_W = min(num_of_cracked_images_W, num_of_non_cracked_images_W)
 
 
 # select the files to be copied into training and test sets for each of the 3 types of concrete
-non_cracked_images_to_copy_D = non_cracked_images_path_contents_D[:max_num_of_images_to_select_from_D]
+non_cracked_images_to_copy_D = non_cracked_images_path_contents_D[:max_num_of_images_to_select_from_D]# 三种混泥土中分别选择少的部分，比如D（crack：6，no-crack：4），那么从D中最多拿出4个出来
 cracked_images_to_copy_D = cracked_images_path_contents_D[:max_num_of_images_to_select_from_D]
 
 non_cracked_images_to_copy_P = non_cracked_images_path_contents_P[:max_num_of_images_to_select_from_P]
@@ -98,6 +101,16 @@ cracked_images_train_W, cracked_images_test_W, cracked_images_valid_W = create_s
 test_folder_path = r"SDNET2018\test//"
 train_folder_path = r"SDNET2018\train//"
 valid_folder_path = r"SDNET2018\valid//"
+#分割数据集流程：
+#首先取出D，P，W数据，一共六个文件夹，每个文件夹都打乱，接着分别获取每个文件夹的数量，然后在同一类（分别D，P，W）中获取数量最少的数，比如D（crack：6，no-crack：4），那么从D中最多拿出4个出来；
+#接着分别取出作为M，然后设置分割阈值（训练样本数占总的同一类总数的比例，验证集占训练集的比例），然后求出训练样本的个数，验证集的个数，然后从M划分验证集，测试集，训练集。
+#然后把这些文件放到根目录下。
+# 总体来说，就是先打乱，然后按照比例取出数据，作为验证集，测试集，训练集。（这里还没有把DPW合并，所以每个操作都是分别针对同一类做的）
+
+
+
+
+
 
 def copy_images(base_path_to_images, image_list_test, image_list_train, image_list_valid, label):
   for image in image_list_test:
