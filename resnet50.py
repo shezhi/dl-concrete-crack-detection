@@ -33,7 +33,7 @@ N_VALID =3394
 N_TEST = 3394
 
 # Create Generators
-train_datagen=ImageDataGenerator(rescale=1./255)
+train_datagen=ImageDataGenerator(rescale=1./255)# 把图片像素值从[0-255]归一化[0-1]
 train_generator=train_datagen.flow_from_directory(
         directory=r"SDNET2018\train",
         target_size=TARGET_SIZE,
